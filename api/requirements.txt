@@ -1,0 +1,9 @@
+tensorflow==2.10.1
+tensorflow-serving-api
+fastapi
+uvicorn
+python-multipart
+python==3.9
+pillow
+matplotlib
+numpy
