@@ -1,6 +1,6 @@
 import tensorflow as tf
 from io import BytesIO
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Response
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import numpy as np
@@ -262,18 +262,34 @@ async def ping():
 
 
 def read_file_as_image(data) -> np.ndarray:
-    image = np.array(Image.open(BytesIO(data)))
+    image = Image.open(BytesIO(data)).convert("RGB")
+    image = np.array(image.resize((256, 256)))
     return image
 
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    image = read_file_as_image(await file.read())
-    image_batch = np.expand_dims(image, 0)
-    predictions = model.predict(image_batch)
-    predicted_class = plant_disease_info[np.argmax(predictions[0])]
-    confidence = float(np.max(predictions[0]))  # Convert numpy.float32 to float
-    return {"class": predicted_class, "confidence": confidence}
+    try:
+        # Read the image file
+        image = read_file_as_image(await file.read())
+
+        # Prepare image for prediction
+        image_batch = np.expand_dims(image, 0)
+
+        # Make prediction
+        predictions = model.predict(image_batch)
+
+        # Get predicted class and confidence
+        predicted_class = plant_disease_info[np.argmax(predictions[0])]
+        confidence = float(np.max(predictions[0]))
+
+        confidence_percentage = str(int(round(confidence * 100))) + "%"
+        return {"data": predicted_class, "confidence": confidence_percentage}
+
+    except (IOError, ValueError) as e:  # Catch specific exceptions
+        return Response(
+            content={"error": f"Error processing image: {str(e)}"}, status_code=500
+        )
 
 
 if __name__ == "__main__":
