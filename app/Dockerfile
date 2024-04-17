@@ -8,7 +8,7 @@ RUN addgroup --gid 1000 nonroot && \
 
 RUN echo 'nonroot ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-USER 11000
+USER nonroot
 
 # 
 WORKDIR /code/app
