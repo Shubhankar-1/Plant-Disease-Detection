@@ -1,6 +1,11 @@
 # 
 FROM python:3.9
 
+RUN apt update && apt install -y sudo adduser
+
+RUN addgroup --gid 1000 nonroot && \
+    adduser --uid 1000 --gid 1000 --disabled-password --gecos "" nonroot
+
 RUN echo 'nonroot ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 USER 11000
