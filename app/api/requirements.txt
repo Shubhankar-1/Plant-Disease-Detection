@@ -1,0 +1,12 @@
+tensorflow==2.10.1
+tensorflow-serving-api
+fastapi
+uvicorn
+python-multipart
+# python==3.9
+pillow
+matplotlib
+numpy
+
+streamlit==1.19.0
+protobuf==3.19.0
