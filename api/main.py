@@ -31,7 +31,7 @@ with open("plant_info.json", "r") as file:
     plant_disease_info = json.load(file)
 
 
-@app.get("/ping")
+@app.get("/")
 async def ping():
     return "Hello, Server is running"
 
