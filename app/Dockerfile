@@ -3,7 +3,7 @@ FROM python:3.9
 
 RUN echo 'nonroot ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-USER nonroot
+USER 11000
 
 # 
 WORKDIR /code/app
